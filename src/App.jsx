@@ -1,11 +1,13 @@
-import { useState, useEffect } from "react";
-import axios from "Axios";
+import { useState, useEffect, useRef } from "react";
+
 import Characters from "./components/Characters";
+import Status from "./components/Status";
 
 function App() {
   const [searchInput, setSearchInput] = useState("");
   const [characters, setCharacters] = useState([]);
   const [status, setStatus] = useState("");
+  const searchRef = useRef(null);
 
   useEffect(() => {
     fetch("https://rickandmortyapi.com/api/character")
@@ -18,6 +20,8 @@ function App() {
       });
   }, []);
 
+  console.log(searchRef);
+
   return (
     <div className="App">
       <h1 className="flex justify-center pt-20 text-5xl font-bold">SnapShot</h1>
@@ -27,60 +31,20 @@ function App() {
           className="mt-10 p-1 rounded-sm bg-slate-100"
           type="text"
           placeholder="Search..."
-        ></input>
+          ref={searchRef}
+        />
         <button
-          onClick={() => {
-            setSearchInput(document.getElementById("searchInput").value);
-          }}
           className="bg-slate-200 mt-10 ml-1 p-1 hover:bg-slate-300 rounded-md font-semibold"
+          onClick={() => setSearchInput(searchRef.current.value)}
         >
           Search
         </button>
       </div>
-      <div className="flex justify-center gap-4 mt-6">
-        <button
-          className={`${
-            status === "" ? "bg-slate-500" : "bg-slate-800"
-          } bg-slate-800 text-white p-1 hover:cursor-pointer hover:bg-slate-600 shadow-sm shadow-black rounded-md font-semibold w-14`}
-          onClick={() => {
-            setStatus("");
-          }}
-        >
-          All
-        </button>
-        <button
-          className={`${
-            status === "Dead" ? "bg-red-700" : "bg-slate-800"
-          } bg-slate-800 text-white p-1 hover:cursor-pointer hover:bg-slate-600 shadow-sm shadow-black rounded-md font-semibold w-14`}
-          onClick={() => {
-            setStatus("Dead");
-          }}
-        >
-          Dead
-        </button>
-        <button
-          className={`${
-            status === "Alive" ? "bg-green-700" : "bg-slate-800"
-          } bg-slate-800 text-white p-1 hover:cursor-pointer hover:bg-slate-600 shadow-sm shadow-black rounded-md font-semibold w-14`}
-          onClick={() => {
-            setStatus("Alive");
-          }}
-        >
-          Alive
-        </button>
-        <button
-          className={`${
-            status === "unknown" ? "bg-purple-800" : "bg-slate-800"
-          } bg-slate-800 text-white p-1 hover:cursor-pointer hover:bg-slate-600 shadow-sm shadow-black rounded-md font-semibold w-20`}
-          onClick={() => {
-            setStatus("unknown");
-          }}
-        >
-          Unknown
-        </button>
-      </div>
+      <Status status={status} setStatus={setStatus} />
       <div className="flex justify-center mt-12">
-        <h1 className="font-bold text-2xl">{status} Character Pictures</h1>
+        <h1 className="font-bold text-2xl capitalize">
+          {status} character pictures
+        </h1>
       </div>
       <div className="flex-1 max-w-max mx-auto p-10 ">
         <Characters
