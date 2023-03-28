@@ -15,12 +15,9 @@ function App() {
         return res.json();
       })
       .then((data) => {
-        //console.log(data);
         setCharacters(data.results);
       });
   }, []);
-
-  console.log(searchRef);
 
   return (
     <div className="App">
